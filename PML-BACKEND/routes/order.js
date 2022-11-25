@@ -38,7 +38,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-//GET BY ORDER NO.
+//GET BY ID
 router.get("/:id", async (req, res) => {
   try {
     const orders = await Order.findById(req.params.id, { details: 1 });
