@@ -251,10 +251,9 @@ function App() {
       <div className="row">
         <div className="col-md-12">
           <div className="form-group mb-3">
-            <h5>PML Format</h5>
-            <div className="d-flex gap-3">
-              <textarea value={pml} className="col form-control" onChange={onChangePml} rows="15"/>
-              <div className="col">
+            <h5>PIZZA TEST</h5>
+            <div className="display">
+              {orderData.length > 0 && 
                 <table className="table">
                   <thead>
                     <tr>
@@ -286,7 +285,8 @@ function App() {
                     )}
                   </tbody>
                 </table>
-              </div>
+              }
+              <textarea value={pml} className="form-control" onChange={onChangePml} rows="15"/>
             </div>
           </div>
           <button className="btn btn-dark" type="button" onClick={processPml}>Process</button>
