@@ -3,6 +3,7 @@ import { publicRequest } from './backend'
 import dayjs from 'dayjs'
 import './App.css'
 
+//default pml data
 const defaultPmlValue = 
 `{order number="123"}
   {pizza number="1"}
@@ -27,6 +28,7 @@ const defaultPmlValue =
   {\\pizza}
 {\\order}`;
 
+//values for use for validations
 const pizzaDetails = {
   sizes: ['small', 'medium', 'large'],
   crusts: ['thin', 'thick', 'hand-tossed', 'deep dish'],
@@ -43,40 +45,45 @@ function App() {
   const [htmlString, setHtmlString] = useState("")
   const [orderData, setOrderData] = useState([])
 
+  //load order data at first run
   useEffect(() => {
     getOrder()
   },[]);
 
+  //get data from db
   const getOrder = () => {
     publicRequest.get("/order")
       .then((res) => {
-        setOrderData(res.data);
+        setOrderData(res.data); 
       })
       .catch((err) => {
         console.log("err");
       });
   }
 
+  //create new order
   const saveOrder = (data) => {
     publicRequest.post("/order", data)
       .then((res) => {
-        setOrderData(prevArray => [...prevArray, res.data])//update order list
+        setOrderData(prevArray => [...prevArray, res.data]) 
       })
       .catch((err) => {
         console.log("err");
       });
   }
 
+  //delete data from order list
   const deleteOrder = (id) => {
     publicRequest.delete("/order/"+id)
       .then((res) => {
-        setOrderData(orderData.filter(item => item._id !== id))
+        setOrderData(orderData.filter(item => item._id !== id)) 
       })
       .catch((err) => {
         console.log("err");
       });
   }
 
+  //display to textarea
   const UseOrder = (id) => {
     publicRequest.get("/order/"+id)
       .then((res) => {
@@ -87,16 +94,19 @@ function App() {
       });
   }
 
+  // update pml on change
   const onChangePml = (e) => {
     setPml(e.target.value)
   }
 
+  //pml format to htmltags
   const convertToHtmlTag = (order) => {
     order = order.replace(/{/g, '<').replace(/\\/g, '/').replace(/}/g, '>');
     const parser = new DOMParser();
     return parser.parseFromString(order, 'text/xml');
   }
 
+  //validate
   const validate = (doc) => {
     const orderTags = doc.getElementsByTagName('order');
     if (orderTags.length === 0) return "No orders";
@@ -175,13 +185,14 @@ function App() {
 
   const processPml = () => {
     const toHtmlTags = convertToHtmlTag(pml);
-     //check if format ix valid
+     //check if format is valid
     const checkValidation = validate(toHtmlTags)
     if (checkValidation !== 'Valid'){
       setHtmlString(`<span class="text-danger"">${checkValidation}</span>`)
       return
     }
 
+    //update to htmltags
     const order = toHtmlTags.getElementsByTagName('order')[0];
     let parsedStr = `<ul class="order"><li>Order ${order.getAttribute('number')}:`;
     let pizzas = order.getElementsByTagName('pizza');
@@ -193,7 +204,6 @@ function App() {
         const crust = pizza.getElementsByTagName('crust')[0].textContent;
         const pizzaType = pizza.getElementsByTagName('type')[0].textContent;
         parsedStr += `<li>Pizza ${pizza.getAttribute('number')} - ${size}, ${crust}, ${pizzaType}`;
-
         if (pizzaType.toLowerCase() === 'custom') {
           const toppingAreas = pizza.getElementsByTagName('toppings');
           if (toppingAreas.length) {
@@ -218,9 +228,11 @@ function App() {
       }
       parsedStr += `</ul>`;
     }
-
     parsedStr += `</li></ul>`;
+
+    //get string data
     setHtmlString(parsedStr)
+    //save to db
     saveToDB(order.getAttribute('number'), pml)
   }
 
@@ -228,6 +240,7 @@ function App() {
     setHtmlString("")
   }
 
+  //save to db
   const saveToDB = (orderNo, order) => {
     const data = {orderNo: Number(orderNo), details: order}
     saveOrder(data)
@@ -282,7 +295,7 @@ function App() {
       <div className="row">
         <div className="col-md-12 mt-3">
           { htmlString !== ""
-            ? <div dangerouslySetInnerHTML={{__html: htmlString}}/>
+            ? <div dangerouslySetInnerHTML={{__html: htmlString}}/> //get string data to html
             : <div>Nothing to display yet</div>
           }
           { htmlString !== "" && <button className="btn btn-danger mt-3" type="button" onClick={clear}>Clear</button>}
