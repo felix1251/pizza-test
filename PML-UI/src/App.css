@@ -1,0 +1,19 @@
+#root {
+  max-width: 1280px;
+  padding: 2rem;
+}
+
+.form-control { width: 500px; }
+
+.order {
+  list-style: none;
+}
+
+ul {
+  list-style: none;
+}
+
+.pizzas > li {
+  margin-bottom: 10px;
+}
+
