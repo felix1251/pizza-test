@@ -5,11 +5,12 @@ PIZZA TEST(PML)
 cd PML-UI
 npm install
 npm run dev
-
+```
 
 #BACKEND
 ```
 cd PML-BACKEND
 npm install
 npm run dev
+```
 
