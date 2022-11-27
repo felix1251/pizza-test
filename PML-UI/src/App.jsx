@@ -28,7 +28,7 @@ const defaultPmlValue =
   {\\pizza}
 {\\order}`;
 
-//values for use for validations
+//values use for validations
 const pizzaDetails = {
   sizes: ['small', 'medium', 'large'],
   crusts: ['thin', 'thick', 'hand-tossed', 'deep dish'],
@@ -187,6 +187,7 @@ function App() {
     const toHtmlTags = convertToHtmlTag(pml);
      //check if format is valid
     const checkValidation = validate(toHtmlTags)
+    
     if (checkValidation !== 'Valid'){
       setHtmlString(`<span class="text-danger"">${checkValidation}</span>`)
       return
