@@ -11,6 +11,6 @@ npm run dev
 ```
 cd PML-BACKEND
 npm install
-npm run dev
+npm run start
 ```
 
